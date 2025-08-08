@@ -15,27 +15,20 @@ namespace K2SimpleZoom
 
         public void OnDialogueStarted(Dialogue dialogue) { }
         public void OnLineStarted(DialogueLine line) { }
-        public void OnModUnLoaded() { }
+        public void OnModUnLoaded()
+        {
+            SaveManager.SetKey("ScrollValue", null);
+        }
         public void OnModLoaded(ModManifest manifest)
         {
-            Options.AddSlider("Zoom Sensitvity", "Settings.GameTab", 5, 0, 20);
+            MenuSetup();
         }
 
         public void OnFrame(float deltaTime)
         {
-            if (!MenuManager.IsPaused && !TabMenu.IsOpen && !ConsoleUI.IsOpen && MenuManager.InGame) // in most cases this is fine
+            if (DetectMenu())
             {
-                if (Asuna.Minimap.MinimapPlayerIcon.Instance != null) // this is needed due to the if statement below this causing exceptins
-                {
-                    if (!Asuna.Minimap.MinimapUI.Instance.Maximized) // this causes exceptions if you are inside a building, and creates a bunch of lag, and needs the above if statement to be where it is
-                    {
-                        ZoomScrollOnFrame();
-                    }
-                }
-                else
-                {
-                    ZoomScrollOnFrame();
-                }
+                IncrementOnKeyPress();
             }
         }
 
@@ -44,67 +37,77 @@ namespace K2SimpleZoom
             ZoomKeySaveBetweenLevels();
         }
 
+        public void MenuSetup()
+        {
+            Options.AddSlider("Zoom Sensitvity", "Settings.GameTab", 5, 0, 20);
+        }
+
+        public bool DetectMenu()
+        {
+            bool MenuNotOpen = false;
+            if (!MenuManager.IsPaused && !TabMenu.IsOpen && !ConsoleUI.IsOpen && MenuManager.InGame) // Checks if the game is not in the following:  Pause Menu, Phone Menu, Dev Console, and TitleScreen
+            {
+                if (Asuna.Minimap.MinimapPlayerIcon.Instance != null) // Checks if the Minimap PlayerIcon exists
+                {
+                    if (!Asuna.Minimap.MinimapUI.Instance.Maximized) // Checks if the Minimap is fullscreened
+                    {
+                        MenuNotOpen = true;
+                    }
+                }
+                else
+                {
+                    MenuNotOpen = true;
+                }
+            }
+            return MenuNotOpen;
+        }
+
+        private void IncrementOnKeyPress()
+        {
+            float SaveKeyScrollValue = SaveManager.GetKey("ScrollValue");
+            float IncrementValue = Options.Get("Zoom Sensitvity", "Settings.GameTab").Int;
+            float CameraZoomLevel = Camera.main.orthographicSize;
+            float InputScrollwheelFloat = UnityEngine.Input.GetAxis("Mouse ScrollWheel");
+            bool ValidCameraZoomLevel = false;
+
+            IncrementValue = IncrementValue / 10; // Menu slider goes from 0 to 20, the default CameraZoomLevel is 5.5
+
+            if (InputScrollwheelFloat > 0) // Zoom in Scrollwheel up
+            {
+                if (CameraZoomLevel - IncrementValue >= 0.1) // Make sure that the camera isn't inverted, or 0
+                {
+                    SaveKeyScrollValue -= IncrementValue;
+                    ValidCameraZoomLevel = true;
+                }
+            }
+            else if (InputScrollwheelFloat < 0) // Zoom out Scrollwheel down
+            {
+                SaveKeyScrollValue += IncrementValue;
+                ValidCameraZoomLevel = true;
+            }
+            if (CameraZoomLevel <= 0) // Check if the Game sets the CameraZoomLevel to a value lower or equal to zero, useful on levels such as Sublevel One
+            {
+                CameraZoomLevel = (float)5.5;
+                SaveManager.SetKey("ScrollValue", CameraZoomLevel);
+                Camera.main.orthographicSize = CameraZoomLevel;
+            }
+            if (ValidCameraZoomLevel) // Saves the CameraZoomLevel
+            {
+                CameraZoomLevel = SaveKeyScrollValue;
+                SaveManager.SetKey("ScrollValue", CameraZoomLevel);
+                Camera.main.orthographicSize = CameraZoomLevel;
+            }
+        }
+
         private void ZoomKeySaveBetweenLevels()
         {
             float ScrollValueFloat = SaveManager.GetKey("ScrollValue");
-            float Camerafloat = Camera.main.orthographicSize;
+            float CameraZoomLevel = Camera.main.orthographicSize;
 
-            Camerafloat = ScrollValueFloat;
+            CameraZoomLevel = ScrollValueFloat;
 
-            Camera.main.orthographicSize = Camerafloat;
-        }
+            Camera.main.orthographicSize = CameraZoomLevel;
 
-        private void ZoomScrollOnFrame()
-        {
-            float Camerafloat = Camera.main.orthographicSize;
-            float InputKeyBool = UnityEngine.Input.GetAxis("Mouse ScrollWheel");
-
-            if (InputKeyBool > 0)
-            {
-                IncrementDownOnKeyPress();
-            }
-            else if (InputKeyBool < 0)
-            {
-                IncrementUpOnKeyPress();
-            }
-            else if (Camerafloat <= 0)
-            {
-                Camerafloat = (float)5.5;
-
-                SaveManager.SetKey("ScrollValue", Camerafloat);
-                Camera.main.orthographicSize = Camerafloat;
-            }
-        }
-
-        private void IncrementUpOnKeyPress()
-        {
-            float ScrollValueFloat = SaveManager.GetKey("ScrollValue");
-            float Camerafloat = Camera.main.orthographicSize;
-            float IncrementValue = Options.Get("Zoom Sensitvity", "Settings.GameTab").Int;
-            IncrementValue = IncrementValue / 10;
-
-            ScrollValueFloat += IncrementValue;
-            Camerafloat = ScrollValueFloat;
-
-            SaveManager.SetKey("ScrollValue", Camerafloat);
-            Camera.main.orthographicSize = Camerafloat;
-        }
-
-        private void IncrementDownOnKeyPress()
-        {
-            float ScrollValueFloat = SaveManager.GetKey("ScrollValue");
-            float Camerafloat = Camera.main.orthographicSize;
-            float IncrementValue = Options.Get("Zoom Sensitvity", "Settings.GameTab").Int;
-            IncrementValue = IncrementValue / 10;
-
-            if (ScrollValueFloat - IncrementValue > 0.1)
-            {
-                ScrollValueFloat -= IncrementValue;
-                Camerafloat = ScrollValueFloat;
-
-                SaveManager.SetKey("ScrollValue", Camerafloat);
-                Camera.main.orthographicSize = Camerafloat;
-            }
         }
     }
 }
