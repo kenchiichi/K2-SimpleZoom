@@ -1,0 +1,6 @@
+/K2-SimpleZoom/obj/*.*
+/K2-SimpleZoom/obj/Debug/netstandard2.1/*.*
+/K2-SimpleZoom/obj/Debug/netstandard2.1/Debug
+/K2-SimpleZoom/obj/Debug/netstandard2.1/TempPE
+/K2-SimpleZoom/bin
+/.vs
