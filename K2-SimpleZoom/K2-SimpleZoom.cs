@@ -17,7 +17,8 @@ namespace K2SimpleZoom
         public void OnLineStarted(DialogueLine line) { }
         public void OnModUnLoaded()
         {
-            SaveManager.SetKey("ScrollValue", null);
+            SaveManager.SetKey("ScrollValue", null);  // Remove the Save key
+            Camera.main.orthographicSize = (float)5.5; // Set the CameraZoomLevel to it's default state
         }
         public void OnModLoaded(ModManifest manifest)
         {
