@@ -1,0 +1,100 @@
+﻿using ANToolkit;
+using ANToolkit.Debugging;
+using ANToolkit.Save;
+using ANToolkit.UI;
+using Asuna.UI;
+using UnityEngine;
+
+namespace K2SimpleZoom
+{
+    public class K2SZ
+    {
+        public void DoNothing()
+        {
+            //Hi!  This function does nothing, if you are looking for something suspicious, you shoud probably look at https://media1.tenor.com/m/cSZp25bpjjoAAAAd/work-cat.gif.  If you are looking for mistakes, or inefficiencies, do let me know, I'd love to fix them.
+        }
+        public void CleanMod()
+        {
+            SaveManager.SetKey("ScrollValue", null);  // Remove the Save key
+            Camera.main.orthographicSize = (float)5.5; // Set the cameraZoomLevel to it's default state
+        }
+
+        public void MenuSetup()
+        {
+            Debug.Log("K2-SimpleZoom installed.");
+            Options.AddSlider("Zoom Sensitvity", "Settings.GameTab", 5, 0, 20);
+        }
+
+        public bool DetectMenu()
+        {
+            bool MenuNotOpen = false;
+            if (!MenuManager.IsPaused && !TabMenu.IsOpen && !ConsoleUI.IsOpen && MenuManager.InGame) // Checks if the game is not in the following:  Pause Menu, Phone Menu, Dev Console, and TitleScreen
+            {
+                if (Asuna.Minimap.MinimapPlayerIcon.Instance != null) // Checks if the Minimap PlayerIcon exists
+                {
+                    if (!Asuna.Minimap.MinimapUI.Instance.Maximized) // Checks if the Minimap is fullscreened
+                    {
+                        MenuNotOpen = true;
+                    }
+                }
+                else
+                {
+                    MenuNotOpen = true;
+                }
+            }
+            return MenuNotOpen;
+        }
+
+        public void IncrementOnKeyPress()
+        {
+            if (DetectMenu())
+            {
+                float saveKeyScrollValue = SaveManager.GetKey("ScrollValue");
+                float incrementValue = Options.Get("Zoom Sensitvity", "Settings.GameTab").Int;
+                float cameraZoomLevel = Camera.main.orthographicSize;
+                float inputScrollwheelFloat = UnityEngine.Input.GetAxis("Mouse ScrollWheel");
+                bool ValidcameraZoomLevel = false;
+
+                incrementValue = incrementValue / 10; // Menu slider goes from 0 to 20, the default cameraZoomLevel is 5.5
+
+                if (inputScrollwheelFloat > 0) // Zoom in Scrollwheel up
+                {
+                    if (cameraZoomLevel - incrementValue >= 0.1) // Make sure that the camera isn't inverted, or 0
+                    {
+                        saveKeyScrollValue -= incrementValue;
+                        ValidcameraZoomLevel = true;
+                    }
+                }
+                else if (inputScrollwheelFloat < 0) // Zoom out Scrollwheel down
+                {
+                    saveKeyScrollValue += incrementValue;
+                    ValidcameraZoomLevel = true;
+                }
+                if (cameraZoomLevel <= 0) // Check if the Game sets the cameraZoomLevel to a value lower or equal to zero, useful on levels from the "Skip to Content" menu such as "Sublevel One" 
+                {
+                    cameraZoomLevel = (float)5.5;
+                    SaveManager.SetKey("ScrollValue", cameraZoomLevel);
+                    Camera.main.orthographicSize = cameraZoomLevel;
+                }
+                if (ValidcameraZoomLevel) // Saves the cameraZoomLevel
+                {
+                    cameraZoomLevel = saveKeyScrollValue;
+                    SaveManager.SetKey("ScrollValue", cameraZoomLevel);
+                    Camera.main.orthographicSize = cameraZoomLevel;
+                }
+
+            }
+        }
+
+        public void ZoomKeySaveBetweenLevels()
+        {
+            float ScrollValueFloat = SaveManager.GetKey("ScrollValue");
+            float cameraZoomLevel = Camera.main.orthographicSize;
+
+            cameraZoomLevel = ScrollValueFloat;
+
+            Camera.main.orthographicSize = cameraZoomLevel;
+
+        }
+    }
+}
