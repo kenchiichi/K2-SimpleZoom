@@ -22,7 +22,9 @@ namespace K2SimpleZoom
         public void MenuSetup()
         {
             Debug.Log("K2-SimpleZoom installed.");
+            SaveManager.SetKey("ScrollValue", Camera.main.orthographicSize);
             Options.AddSlider("Zoom Sensitvity", "Settings.GameTab", 5, 0, 20);
+            Options.Add("Scroll Direction", 0, "Settings.GameTab", "Default", "Inverted");
         }
 
         public bool DetectMenu()
@@ -55,7 +57,12 @@ namespace K2SimpleZoom
                 float inputScrollwheelFloat = UnityEngine.Input.GetAxis("Mouse ScrollWheel");
                 bool ValidcameraZoomLevel = false;
 
-                incrementValue = incrementValue / 10; // Menu slider goes from 0 to 20, the default cameraZoomLevel is 5.5
+                incrementValue /= 10; // Menu slider goes from 0 to 20, the default cameraZoomLevel is 5.5
+
+                if (Options.Get("Scroll Direction", "Settings.GameTab").Int == 1) // Inverts the Scroll direction
+                {
+                    incrementValue -= incrementValue * 2;
+                }
 
                 if (inputScrollwheelFloat > 0) // Zoom in Scrollwheel up
                 {
@@ -89,9 +96,7 @@ namespace K2SimpleZoom
         public void ZoomKeySaveBetweenLevels()
         {
             float ScrollValueFloat = SaveManager.GetKey("ScrollValue");
-            float cameraZoomLevel = Camera.main.orthographicSize;
-
-            cameraZoomLevel = ScrollValueFloat;
+            float cameraZoomLevel = ScrollValueFloat;
 
             Camera.main.orthographicSize = cameraZoomLevel;
 

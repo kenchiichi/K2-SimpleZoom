@@ -7,12 +7,12 @@ namespace K2SimpleZoom
     {
         private readonly K2SZ K2SZ = new K2SZ();
 
-        public void OnDialogueStarted(Dialogue dialogue) 
+        public void OnDialogueStarted(Dialogue dialogue)
         {
             K2SZ.DoNothing();
         }
 
-        public void OnLineStarted(DialogueLine line) 
+        public void OnLineStarted(DialogueLine line)
         {
             K2SZ.DoNothing();
         }
