@@ -18,7 +18,6 @@ namespace K2SimpleZoom
         {
             SaveManager.SetKey("ScrollValue", null);  // Remove the Save key
             Camera.main.orthographicSize = (float)5.5; // Set the cameraZoomLevel to it's default state
-            //this is a comment
         }
 
         public void MenuSetup()
