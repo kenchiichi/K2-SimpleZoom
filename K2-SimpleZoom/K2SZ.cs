@@ -32,7 +32,7 @@ namespace K2SimpleZoom
         public bool DetectMenu()
         {
             bool menuNotOpen = false;
-            if (!MenuManager.IsPaused && !TabMenu.IsOpen && !ConsoleUI.IsOpen && MenuManager.InGame && GameObject.Find("ModMenu(Clone)") == null && GameObject.Find("OpenMenu") == null) // Checks if the game is not in the following:  Pause Menu, Phone Menu, Dev Console, TitleScreen, and ModMenu
+            if (!MenuManager.IsPaused && !TabMenu.IsOpen && !ConsoleUI.IsOpen && MenuManager.InGame && GameObject.Find("ModMenu(Clone)") == null && GameObject.Find("DialogueCanvas") == null) // Checks if the game is not in the following:  Pause Menu, Phone Menu, Dev Console, TitleScreen, and ModMenu
             {
                 if (Asuna.Minimap.MinimapPlayerIcon.Instance != null) // Checks if the Minimap PlayerIcon exists
                 {
