@@ -2,9 +2,7 @@
 using ANToolkit.Debugging;
 using ANToolkit.Save;
 using ANToolkit.UI;
-using Asuna.Dialogues;
 using Asuna.UI;
-using Modding;
 using UnityEngine;
 
 namespace K2SimpleZoom
@@ -32,11 +30,11 @@ namespace K2SimpleZoom
         public bool DetectMenu()
         {
             bool menuNotOpen = false;
-            if (!MenuManager.IsPaused && 
-                !TabMenu.IsOpen && 
-                !ConsoleUI.IsOpen && 
-                MenuManager.InGame && 
-                GameObject.Find("ModMenu(Clone)") == null && 
+            if (!MenuManager.IsPaused &&
+                !TabMenu.IsOpen &&
+                !ConsoleUI.IsOpen &&
+                MenuManager.InGame &&
+                GameObject.Find("ModMenu(Clone)") == null &&
                 GameObject.Find("DialogueCanvas") == null
                 ) // Checks if the game is not in the following:  Pause Menu, Phone Menu, Dev Console, TitleScreen, ModMenu, and Dialogue
             {
