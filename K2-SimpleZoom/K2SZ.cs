@@ -3,6 +3,7 @@ using ANToolkit.Debugging;
 using ANToolkit.Save;
 using ANToolkit.UI;
 using Asuna.UI;
+using Modding;
 using UnityEngine;
 
 namespace K2SimpleZoom
@@ -47,9 +48,23 @@ namespace K2SimpleZoom
             return MenuNotOpen;
         }
 
+        public bool CheckValidMousePosition()
+        {
+            Vector3 mousePos = Input.mousePosition;
+
+            if (mousePos.x >= 0 && mousePos.x <= Screen.width && mousePos.y >= 0 && mousePos.y <= Screen.height)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public void IncrementOnKeyPress()
         {
-            if (DetectMenu())
+            if (DetectMenu() && CheckValidMousePosition())
             {
                 float saveKeyScrollValue = SaveManager.GetKey("ScrollValue");
                 float incrementValue = Options.Get("Zoom Sensitvity", "Settings.GameTab").Int;
