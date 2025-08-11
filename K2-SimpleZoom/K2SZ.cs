@@ -30,22 +30,22 @@ namespace K2SimpleZoom
 
         public bool DetectMenu()
         {
-            bool MenuNotOpen = false;
+            bool menuNotOpen = false;
             if (!MenuManager.IsPaused && !TabMenu.IsOpen && !ConsoleUI.IsOpen && MenuManager.InGame) // Checks if the game is not in the following:  Pause Menu, Phone Menu, Dev Console, and TitleScreen
             {
                 if (Asuna.Minimap.MinimapPlayerIcon.Instance != null) // Checks if the Minimap PlayerIcon exists
                 {
                     if (!Asuna.Minimap.MinimapUI.Instance.Maximized) // Checks if the Minimap is fullscreened
                     {
-                        MenuNotOpen = true;
+                        menuNotOpen = true;
                     }
                 }
                 else
                 {
-                    MenuNotOpen = true;
+                    menuNotOpen = true;
                 }
             }
-            return MenuNotOpen;
+            return menuNotOpen;
         }
 
         public bool CheckValidMousePosition()
@@ -70,7 +70,7 @@ namespace K2SimpleZoom
                 float incrementValue = Options.Get("Zoom Sensitvity", "Settings.GameTab").Int;
                 float cameraZoomLevel = Camera.main.orthographicSize;
                 float inputScrollwheelFloat = UnityEngine.Input.GetAxis("Mouse ScrollWheel");
-                bool ValidcameraZoomLevel = false;
+                bool validCameraZoomLevel = false;
 
                 incrementValue /= 10; // Menu slider goes from 0 to 20, the default cameraZoomLevel is 5.5
 
@@ -84,13 +84,13 @@ namespace K2SimpleZoom
                     if (cameraZoomLevel - incrementValue >= 0.1) // Make sure that the camera isn't inverted, or 0
                     {
                         saveKeyScrollValue -= incrementValue;
-                        ValidcameraZoomLevel = true;
+                        validCameraZoomLevel = true;
                     }
                 }
                 else if (inputScrollwheelFloat < 0) // Zoom out Scrollwheel down
                 {
                     saveKeyScrollValue += incrementValue;
-                    ValidcameraZoomLevel = true;
+                    validCameraZoomLevel = true;
                 }
                 if (cameraZoomLevel <= 0) // Check if the Game sets the cameraZoomLevel to a value lower or equal to zero, useful on levels from the "Skip to Content" menu such as "Sublevel One" 
                 {
@@ -98,7 +98,7 @@ namespace K2SimpleZoom
                     SaveManager.SetKey("ScrollValue", cameraZoomLevel);
                     Camera.main.orthographicSize = cameraZoomLevel;
                 }
-                if (ValidcameraZoomLevel) // Saves the cameraZoomLevel
+                if (validCameraZoomLevel) // Saves the cameraZoomLevel
                 {
                     cameraZoomLevel = saveKeyScrollValue;
                     SaveManager.SetKey("ScrollValue", cameraZoomLevel);
@@ -110,8 +110,8 @@ namespace K2SimpleZoom
 
         public void ZoomKeySaveBetweenLevels()
         {
-            float ScrollValueFloat = SaveManager.GetKey("ScrollValue");
-            float cameraZoomLevel = ScrollValueFloat;
+            float scrollValueFloat = SaveManager.GetKey("ScrollValue");
+            float cameraZoomLevel = scrollValueFloat;
 
             Camera.main.orthographicSize = cameraZoomLevel;
 
