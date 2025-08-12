@@ -24,6 +24,9 @@ Requirements for C# modding:
 K2-SimpleZoom is a mod that does one thing: make the mouse scroll whell zoom in and out.  You can configure the zoom sensitivity, and even invert the direction of the zoom in the Settings menu, inside the Game tab.
 
 Thanks to BlauKitten for the support in making this SDK! ♥
+
 Thanks to Anduo Games for creating Third Crisis!
+
 Thanks to Bearcore, BlauKoneko, and Phong for inspiring me to create a mod!
+
 And thank YOU for giving my mod a try!
