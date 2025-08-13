@@ -1,10 +1,7 @@
 ﻿using ANToolkit;
 using ANToolkit.Debugging;
-using ANToolkit.ResourceManagement;
 using ANToolkit.Save;
 using ANToolkit.UI;
-using Asuna.Dialogues;
-using Asuna.Items;
 using Asuna.UI;
 using UnityEngine;
 
@@ -37,7 +34,7 @@ namespace K2SimpleZoom
 
         public bool DetectMenu()
         {
-            
+
             bool menuNotOpen = false;
             if (                                             // Checks if the game's state is not in the following:  
                 !MenuManager.IsPaused &&                     // Pause Menu
@@ -56,7 +53,7 @@ namespace K2SimpleZoom
                 FindGameObj("PeithOS Computer UI") &&        // Peitho Blowjob Training Minigame Upgrade shop Menu
                 FindGameObj("SDT Selector") &&               // Peitho Blowjob Training Minigame Upgrade selector Menu
                 FindGameObj("Slave Training UI")             // Peitho Slave Training Minigame Menu
-                ) 
+                )
             {
                 if (Asuna.Minimap.MinimapPlayerIcon.Instance != null) // Checks if the Minimap PlayerIcon exists
                 {
