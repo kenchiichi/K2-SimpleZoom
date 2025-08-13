@@ -1,7 +1,10 @@
 ﻿using ANToolkit;
 using ANToolkit.Debugging;
+using ANToolkit.ResourceManagement;
 using ANToolkit.Save;
 using ANToolkit.UI;
+using Asuna.Dialogues;
+using Asuna.Items;
 using Asuna.UI;
 using UnityEngine;
 
@@ -27,19 +30,32 @@ namespace K2SimpleZoom
             Options.Add("Scroll Direction", 0, "Settings.GameTab", "Default", "Inverted");
         }
 
+        public bool FindGameObj(string obj)
+        {
+            return GameObject.Find(obj) == null;
+        }
+
         public bool DetectMenu()
         {
+            
             bool menuNotOpen = false;
-            if (                                                         // Checks if the game is not in the following:  
-                !MenuManager.IsPaused &&                                 // Pause Menu
-                !TabMenu.IsOpen &&                                       // Phone Menu 
-                !ConsoleUI.IsOpen &&                                     // Dev Console
-                MenuManager.InGame &&                                    // TitleScreen
-                GameObject.Find("ModMenu(Clone)") == null &&             // ModMenu
-                GameObject.Find("DialogueCanvas") == null &&             // Dialogue
-                GameObject.Find("Wrestling Minigame Prefab") == null &&  // Wrestling Minigame
-                GameObject.Find("WorkoutMinigame") == null &&            // Workout Minigame
-                GameObject.Find("DancingMinigame") == null               // Dancing Minigame
+            if (                                             // Checks if the game's state is not in the following:  
+                !MenuManager.IsPaused &&                     // Pause Menu
+                !TabMenu.IsOpen &&                           // Phone Menu 
+                !ConsoleUI.IsOpen &&                         // Dev Console
+                MenuManager.InGame &&                        // TitleScreen
+                FindGameObj("ModMenu(Clone)") &&             // ModMenu
+                FindGameObj("DialogueCanvas") &&             // Dialogue
+                FindGameObj("MatchMinigame(Clone)") &&       // Hacking Minigame
+                FindGameObj("Wrestling Minigame Prefab") &&  // Wrestling Minigame
+                FindGameObj("WorkoutMinigame") &&            // Workout Minigame
+                FindGameObj("DancingMinigame") &&            // Dancing Minigame (probably unnecessary)
+                FindGameObj("BarMixing") &&                  // Bar Mixing Minigame (probably unnecessary)
+                FindGameObj("Jenna Gloryhole") &&            // Gloryhole Minigame
+                FindGameObj("SDT Minigame") &&               // Peitho Training Minigame
+                FindGameObj("PeithOS Computer UI") &&        // Peitho Blowjob Training Minigame Upgrade shop Menu
+                FindGameObj("SDT Selector") &&               // Peitho Blowjob Training Minigame Upgrade selector Menu
+                FindGameObj("Slave Training UI")             // Peitho Slave Training Minigame Menu
                 ) 
             {
                 if (Asuna.Minimap.MinimapPlayerIcon.Instance != null) // Checks if the Minimap PlayerIcon exists
@@ -123,7 +139,6 @@ namespace K2SimpleZoom
             float cameraZoomLevel = scrollValueFloat;
 
             Camera.main.orthographicSize = cameraZoomLevel;
-
         }
     }
 }
