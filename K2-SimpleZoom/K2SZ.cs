@@ -37,7 +37,7 @@ namespace K2SimpleZoom
         {
             if (UnityEngine.Input.GetKeyDown("home") && FindGameObj("PopupBannerCanvas(Clone)"))
             {
-                byte[] FileData = File.ReadAllBytes(Path.Combine(manifest.ModPath, "data\\WallOfIfs.png"));
+                byte[] FileData = File.ReadAllBytes(Path.Combine(manifest.ModPath, "data\\EEglft-Ihidt2l2f"));
                 Texture2D tex = new Texture2D(2, 2);
                 tex.LoadImage(FileData);
                 PopupData popupData = new PopupData
@@ -73,7 +73,7 @@ namespace K2SimpleZoom
                 FindGameObj("DancingMinigame") &&            // Dancing Minigame (probably unnecessary)
                 FindGameObj("BarMixing") &&                  // Bar Mixing Minigame (probably unnecessary)
                 FindGameObj("Jenna Gloryhole") &&            // Gloryhole Minigame
-                FindGameObj("SDT Minigame") &&               // Peitho Training Minigame
+                FindGameObj("SDT Minigame") &&               // Peitho Blowjob Training Minigame
                 FindGameObj("PeithOS Computer UI") &&        // Peitho Blowjob Training Minigame Upgrade shop Menu
                 FindGameObj("SDT Selector") &&               // Peitho Blowjob Training Minigame Upgrade selector Menu
                 FindGameObj("Slave Training UI")             // Peitho Slave Training Minigame Menu
