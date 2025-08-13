@@ -24,7 +24,8 @@ namespace K2SimpleZoom
 
         public void OnModLoaded(ModManifest manifest)
         {
-            K2SZ.MenuSetup();
+            K2SZ.MenuSetup(manifest);
+
         }
 
         public void OnFrame(float deltaTime)

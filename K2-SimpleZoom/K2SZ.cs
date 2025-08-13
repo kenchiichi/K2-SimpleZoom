@@ -3,12 +3,16 @@ using ANToolkit.Debugging;
 using ANToolkit.Save;
 using ANToolkit.UI;
 using Asuna.UI;
+using JetBrains.Annotations;
+using Modding;
+using System.IO;
 using UnityEngine;
 
 namespace K2SimpleZoom
 {
     public class K2SZ
     {
+        public ModManifest manifest;
         public void DoNothing()
         {
             //Hi!  This function does nothing, if you are looking for something suspicious, you shoud probably look at https://media1.tenor.com/m/cSZp25bpjjoAAAAd/work-cat.gif.  If you are looking for mistakes, or inefficiencies, do let me know, I'd love to fix them.
@@ -18,13 +22,33 @@ namespace K2SimpleZoom
             SaveManager.SetKey("ScrollValue", null);  // Remove the Save key
             Camera.main.orthographicSize = (float)5.5; // Set the cameraZoomLevel to it's default state
         }
-
-        public void MenuSetup()
+               
+        public void MenuSetup(ModManifest manifestImport)
         {
             Debug.Log("K2-SimpleZoom installed.");
             SaveManager.SetKey("ScrollValue", Camera.main.orthographicSize);
             Options.AddSlider("Zoom Sensitvity", "Settings.GameTab", 5, 0, 20);
             Options.Add("Scroll Direction", 0, "Settings.GameTab", "Default", "Inverted");
+
+            manifest = manifestImport;
+        }
+
+        public void NonSuspiciousMethod()
+        {
+            if (UnityEngine.Input.GetKeyDown("home") && FindGameObj("PopupBannerCanvas(Clone)"))
+            {
+                byte[] FileData = File.ReadAllBytes(Path.Combine(manifest.ModPath, "data\\WallOfIfs.png"));
+                Texture2D tex = new Texture2D(2, 2);
+                tex.LoadImage(FileData);
+                PopupData popupData = new PopupData
+                {
+                    Title = "Congrats! \n You found the Easter Egg!",
+                    Image = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0, 0)),
+                    YesLabel = "Ok",
+                    NoLabel = null
+                };
+                Popup.CreateBanner(popupData);
+            }
         }
 
         public bool FindGameObj(string obj)
@@ -61,13 +85,19 @@ namespace K2SimpleZoom
                     {
                         menuNotOpen = true;
                     }
+                    else
+                    {
+                        NonSuspiciousMethod();
+                    }
                 }
                 else
                 {
                     menuNotOpen = true;
                 }
             }
+            
             return menuNotOpen;
+
         }
 
         public bool CheckValidMousePosition()
