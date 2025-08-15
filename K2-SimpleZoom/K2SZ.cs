@@ -106,6 +106,7 @@ namespace K2SimpleZoom
             if (                                             // Checks if the game's state is not in the following:
                 GameObjNotActive(new List<string> {
                     "ModMenu(Clone)",                        // ModMenu
+                    "ShopUICanvas",                          // Clothing Shop Menu
                     "DialogueCanvas",                        // Dialogue
                     "Gallery_Scenes",                        // Gallery Scenes Tab
                     "Gallery_CharacterViewer",               // Gallery Character Viewer
