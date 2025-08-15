@@ -1,10 +1,12 @@
 ﻿using ANToolkit;
 using ANToolkit.Debugging;
+using ANToolkit.Playmaker;
 using ANToolkit.Save;
 using ANToolkit.UI;
 using Asuna.UI;
-using JetBrains.Annotations;
 using Modding;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -13,16 +15,7 @@ namespace K2SimpleZoom
     public class K2SZ
     {
         public ModManifest manifest;
-        public void DoNothing()
-        {
-            //Hi!  This function does nothing, if you are looking for something suspicious, you shoud probably look at https://media1.tenor.com/m/cSZp25bpjjoAAAAd/work-cat.gif.  If you are looking for mistakes, or inefficiencies, do let me know, I'd love to fix them.
-        }
-        public void CleanMod()
-        {
-            SaveManager.SetKey("ScrollValue", null);  // Remove the Save key
-            Camera.main.orthographicSize = (float)5.5; // Set the cameraZoomLevel to it's default state
-        }
-               
+
         public void MenuSetup(ModManifest manifestImport)
         {
             Debug.Log("K2-SimpleZoom installed.");
@@ -33,85 +26,12 @@ namespace K2SimpleZoom
             manifest = manifestImport;
         }
 
-        public void NonSuspiciousMethod()
+        public void ZoomKeySaveBetweenLevels()
         {
-            if (UnityEngine.Input.GetKeyDown("home") && FindGameObj("PopupBannerCanvas(Clone)"))
-            {
-                byte[] FileData = File.ReadAllBytes(Path.Combine(manifest.ModPath, "data\\EEglft-Ihidt2l2f"));
-                Texture2D tex = new Texture2D(2, 2);
-                tex.LoadImage(FileData);
-                PopupData popupData = new PopupData
-                {
-                    Title = "Congrats! \n You found the Easter Egg!",
-                    Image = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0, 0)),
-                    YesLabel = "Ok",
-                    NoLabel = null
-                };
-                Popup.CreateBanner(popupData);
-            }
-        }
+            float scrollValueFloat = SaveManager.GetKey("ScrollValue");
+            float cameraZoomLevel = scrollValueFloat;
 
-        public bool FindGameObj(string obj)
-        {
-            return GameObject.Find(obj) == null;
-        }
-
-        public bool DetectMenu()
-        {
-
-            bool menuNotOpen = false;
-            if (                                             // Checks if the game's state is not in the following:  
-                !MenuManager.IsPaused &&                     // Pause Menu
-                !TabMenu.IsOpen &&                           // Phone Menu 
-                !ConsoleUI.IsOpen &&                         // Dev Console
-                MenuManager.InGame &&                        // TitleScreen
-                FindGameObj("ModMenu(Clone)") &&             // ModMenu
-                FindGameObj("DialogueCanvas") &&             // Dialogue
-                FindGameObj("MatchMinigame(Clone)") &&       // Hacking Minigame
-                FindGameObj("Wrestling Minigame Prefab") &&  // Wrestling Minigame
-                FindGameObj("WorkoutMinigame") &&            // Workout Minigame
-                FindGameObj("DancingMinigame") &&            // Dancing Minigame (probably unnecessary)
-                FindGameObj("BarMixing") &&                  // Bar Mixing Minigame (probably unnecessary)
-                FindGameObj("Jenna Gloryhole") &&            // Gloryhole Minigame
-                FindGameObj("SDT Minigame") &&               // Peitho Blowjob Training Minigame
-                FindGameObj("PeithOS Computer UI") &&        // Peitho Blowjob Training Minigame Upgrade shop Menu
-                FindGameObj("SDT Selector") &&               // Peitho Blowjob Training Minigame Upgrade selector Menu
-                FindGameObj("Slave Training UI")             // Peitho Slave Training Minigame Menu
-                )
-            {
-                if (Asuna.Minimap.MinimapPlayerIcon.Instance != null) // Checks if the Minimap PlayerIcon exists
-                {
-                    if (!Asuna.Minimap.MinimapUI.Instance.Maximized) // Checks if the Minimap is fullscreened
-                    {
-                        menuNotOpen = true;
-                    }
-                    else
-                    {
-                        NonSuspiciousMethod();
-                    }
-                }
-                else
-                {
-                    menuNotOpen = true;
-                }
-            }
-            
-            return menuNotOpen;
-
-        }
-
-        public bool CheckValidMousePosition()
-        {
-            Vector3 mousePos = Input.mousePosition;
-
-            if (mousePos.x >= 0 && mousePos.x <= Screen.width && mousePos.y >= 0 && mousePos.y <= Screen.height)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            Camera.main.orthographicSize = cameraZoomLevel;
         }
 
         public void IncrementOnKeyPress()
@@ -160,12 +80,100 @@ namespace K2SimpleZoom
             }
         }
 
-        public void ZoomKeySaveBetweenLevels()
+        private bool GameObjNotActive(List<String> objects)
         {
-            float scrollValueFloat = SaveManager.GetKey("ScrollValue");
-            float cameraZoomLevel = scrollValueFloat;
+            bool objectNotActive = true;
+            foreach (String obj in objects)
+            {
+                if (!(GameObject.Find(obj) == null))
+                {
+                    objectNotActive = false; break;
+                }
+            }
+            return objectNotActive;
+        }
 
-            Camera.main.orthographicSize = cameraZoomLevel;
+        private bool DetectMenu()
+        {
+            bool menuNotOpen = false;
+            if (                                             // Checks if the game's state is not in the following:
+                GameObjNotActive(new List<string> {
+                    "ModMenu(Clone)",                        // ModMenu
+                    "DialogueCanvas",                        // Dialogue
+                    "Gallery_Scenes",                        // Gallery Scenes Tab
+                    "Gallery_CharacterViewer",               // Gallery Character Viewer
+                    "Gallery_Character",                     // Gallery Character Tab
+                    "Gallery_ImageViewer",                   // Gallery Image Viewer
+                    "Gallery_Images",                        // Gallery Image Tab
+                    "Gallery_Animations",                    // Gallery Animations Tab and Viewer
+                    "MatchMinigame(Clone)",                  // Hacking Minigame
+                    "Wrestling Minigame Prefab",             // Wrestling Minigame
+                    "WorkoutMinigame",                       // Workout Minigame
+                    "DancingMinigame",                       // Dancing Minigame
+                    "BarMixing",                             // Bar Mixing Minigame
+                    "Jenna Gloryhole",                       // Gloryhole Minigame
+                    "SDT Minigame",                          // Peitho Blowjob Minigame
+                    "PeithOS Computer UI",                   // Peitho Blowjob Minigame Upgrade shop Menu
+                    "SDT Selector",                          // Peitho Blowjob Minigame Upgrade selector Menu
+                    "Slave Training UI",                     // Peitho Slave Training Minigame Menu
+                }) &&
+                !MenuManager.IsPaused &&                     // Pause Menu
+                !TabMenu.IsOpen &&                           // Phone Menu 
+                !ConsoleUI.IsOpen &&                         // Dev Console
+                MenuManager.InGame                           // TitleScreen
+                )
+            {
+                if (Asuna.Minimap.MinimapPlayerIcon.Instance != null) // Checks if the Minimap PlayerIcon exists
+                {
+                    if (!Asuna.Minimap.MinimapUI.Instance.Maximized) // Checks if the Minimap is fullscreened
+                    {
+                        menuNotOpen = true;
+                    }
+                    else
+                    {
+                        NonSuspiciousMethod();
+                    }
+                }
+                else
+                {
+                    menuNotOpen = true;
+                }
+            }
+
+            return menuNotOpen;
+
+        }
+
+        private bool CheckValidMousePosition()
+        {
+            Vector3 mousePos = Input.mousePosition;
+
+            if (mousePos.x >= 0 && mousePos.x <= Screen.width && mousePos.y >= 0 && mousePos.y <= Screen.height)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void NonSuspiciousMethod()
+        {
+            if (UnityEngine.Input.GetKeyDown("home") && GameObjNotActive(new List<string> { "PopupBannerCanvas(Clone)" })) // Checks if the home button is pressed, and the menu is not already up.
+            {
+                byte[] FileData = File.ReadAllBytes(Path.Combine(manifest.ModPath, "data\\EEglft-Ihidt2l2f"));
+                Texture2D texture2D = new Texture2D(2, 2);
+                texture2D.LoadImage(FileData);
+                PopupData popupData = new PopupData
+                {
+                    Title = "Congrats! \n You found the Easter Egg!",
+                    Image = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0, 0)),
+                    YesLabel = "Ok",
+                    NoLabel = null
+                };
+                Popup.CreateBanner(popupData);
+            }
         }
     }
 }

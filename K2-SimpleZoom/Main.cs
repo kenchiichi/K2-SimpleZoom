@@ -1,5 +1,7 @@
-﻿using Asuna.Dialogues;
+﻿using ANToolkit.Save;
+using Asuna.Dialogues;
 using Modding;
+using UnityEngine;
 
 namespace K2SimpleZoom
 {
@@ -9,23 +11,23 @@ namespace K2SimpleZoom
 
         public void OnDialogueStarted(Dialogue dialogue)
         {
-            K2SZ.DoNothing();
+
         }
 
         public void OnLineStarted(DialogueLine line)
         {
-            K2SZ.DoNothing();
+
         }
 
         public void OnModUnLoaded()
         {
-            K2SZ.CleanMod();
+            SaveManager.SetKey("ScrollValue", null);  // Remove the Save key
+            Camera.main.orthographicSize = (float)5.5; // Set the cameraZoomLevel to it's default state
         }
 
         public void OnModLoaded(ModManifest manifest)
         {
             K2SZ.MenuSetup(manifest);
-
         }
 
         public void OnFrame(float deltaTime)
