@@ -33,6 +33,7 @@ namespace K2SimpleZoom
         public void OnFrame(float deltaTime)
         {
             K2SZ.IncrementOnKeyPress();
+            K2SZ.MainMenuZoomLevel();
         }
 
         public void OnLevelChanged(string oldLevel, string newLevel)

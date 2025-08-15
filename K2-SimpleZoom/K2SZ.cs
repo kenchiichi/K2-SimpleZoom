@@ -1,6 +1,5 @@
 ﻿using ANToolkit;
 using ANToolkit.Debugging;
-using ANToolkit.Playmaker;
 using ANToolkit.Save;
 using ANToolkit.UI;
 using Asuna.UI;
@@ -32,6 +31,14 @@ namespace K2SimpleZoom
             float cameraZoomLevel = scrollValueFloat;
 
             Camera.main.orthographicSize = cameraZoomLevel;
+        }
+
+        public void MainMenuZoomLevel()
+        {
+            if (Camera.main.orthographicSize != 5.5 && !MenuManager.InGame)
+            {
+                Camera.main.orthographicSize = (float)5.5;
+            }
         }
 
         public void IncrementOnKeyPress()
@@ -141,7 +148,6 @@ namespace K2SimpleZoom
             }
 
             return menuNotOpen;
-
         }
 
         private bool CheckValidMousePosition()
