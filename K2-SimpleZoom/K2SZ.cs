@@ -100,7 +100,7 @@ namespace K2SimpleZoom
             return objectNotActive;
         }
 
-        private bool DetectMenu()
+        public bool DetectMenu()
         {
             bool menuNotOpen = false;
             if (                                             // Checks if the game's state is not in the following:
