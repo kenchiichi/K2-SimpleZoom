@@ -94,7 +94,8 @@ namespace K2SimpleZoom
             {
                 if (!(GameObject.Find(obj) == null))
                 {
-                    objectNotActive = false; break;
+                    objectNotActive = false; 
+                    break;
                 }
             }
             return objectNotActive;
